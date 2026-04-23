@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="kn">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -16,13 +17,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#FF5B5B">
+    <meta name="theme-color" content="#FF3E9B">
     
     <style>
        
 
         :root {
-            --primary-color: #FF5B5B;
+            --primary-color: #FF3E9B;
             --bg-color: #fcfcfc;
             --text-color: #333333;
             --list-border: #eeeeee;
@@ -30,13 +31,13 @@
             --search-bg: #f5f5f5;
             --input-bg: #ffffff;
             --input-border: #ccc;
-            --hover-bg: #fff3e0;
+            --hover-bg: #f6dfea;
             --info-box-bg: #fff3e0;
             --btn-bg: #f0f0f0;
-            --btn-border: #FF5B5B;
-            --share-bg: #FF5B5B;
+            --btn-border: #FF3E9B;
+            --share-bg: #FF3E9B;
             --share-text: #f8f8f8;
-            --share-border: #FF5B5B;
+            --share-border: #FF3E9B;
             --section-header: #f9f9f9;
         }
 
@@ -51,7 +52,7 @@
             --hover-bg: #2a2a2a;
             --info-box-bg: #2c2c2c;
             --btn-bg: #333333;
-            --btn-border: #FF5B5B;
+            --btn-border: #FF3E9B;
             --share-bg: #6E1A37;
             --share-text: #c8e6c9;
             --share-border: #6E1A37;
@@ -107,7 +108,7 @@
         }
 
         header {
-            background-color: #FF5B5B;
+            background-color: #FF3E9B;
             color: white;
             padding: 15px 20px; 
             display: flex;
@@ -364,7 +365,7 @@
             <ul id="god-list" class="category-grid"></ul>
             
             <div class="category-section" style="padding: 0px 16px;">
-                <button class="category-btn" onclick="openDasaruSelection()" style="width: 100%; margin-top: 5px; background-color: #FF5B5B; color: white; border: none;">
+                <button class="category-btn" onclick="openDasaruSelection()" style="width: 100%; margin-top: 5px; background-color: #FF3E9B; color: white; border: none;">
                     ದಾಸರ ಪಟ್ಟಿ (List of Dasarus)
                 </button>
             </div>
@@ -399,9 +400,12 @@
                     <button id="font-increase" class="font-btn">A+</button>
                     <button id="fav-toggle-btn" class="font-btn">🤍</button>
                 </div>
-                <button id="share-btn">🔗 ಹಂಚಿಕೊಳ್ಳಿ</button>
+                <button onclick="downloadPDF()" style="background: #FF3E9B; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer;">
+    📄 Save as PDF
+</button>
             </div>
-            <div id="song-lyrics"></div>
+            <div id="song-lyrics">
+    </div>
         </div>
         <div class="action-row">
                  </div>
@@ -472,6 +476,7 @@
     </div>
 
     <script src="songs.js"></script>
+    <body oncontextmenu="return false" style="user-select: none;"></body>
 
     <script>
         const dasaruNotes = {
@@ -859,7 +864,7 @@
             currentCategoryType = 'dasaruList'; 
             
             const customDasaruOrder = [
-                "ನರಹರಿ ತೀರ್ಥರು", "ಶ್ರೀಪಾದರಾಯರು", "ವ್ಯಾಸರಾಜರು", "ಪುರಂದರದಾಸರು","ಕನಕದಾಸರು","ವಿಜಯಪ್ರಭುಗಳು", "ಗೋಪಾಲದಾಸರಾಯರು", "ಜಗನ್ನಾಥ ದಾಸರು", 
+                "ನರಹರಿ ತೀರ್ಥರು", "ಶ್ರೀಪಾದರಾಯರು", "ವ್ಯಾಸರಾಜರು", "ವಾದಿರಾಜರು", "ಪುರಂದರದಾಸರು","ಕನಕದಾಸರು","ವಿಜಯಪ್ರಭುಗಳು", "ಗೋಪಾಲದಾಸರಾಯರು", "ಜಗನ್ನಾಥ ದಾಸರು", 
                 
             ];
             
@@ -1457,6 +1462,28 @@
     </script>
     
     <script>
+        function downloadPDF() {
+    // 1. Point exactly to the box we want to capture
+    const element = document.getElementById('song-lyrics'); 
+    
+    // 2. Safety Check: Did we actually find it?
+    if (!element) {
+        alert("Hold on! The app cannot find the 'song-lyrics' box. Check your HTML!");
+        return; // Stop running the code
+    }
+
+    // 3. Simple, hardcoded PDF settings
+    const options = {
+        margin:       15,
+        filename:     'Dasa-Sahitya-Song.pdf', 
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 }, 
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // 4. Generate and save
+    html2pdf().set(options).from(element).save();
+}
         
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -1467,7 +1494,8 @@
         }
         
         
-        
+        renderHomeCategories();
     </script>
+    
 </body>
 </html>
